@@ -1,33 +1,76 @@
 # CMPCT Developer Guide
 A solution for trustless Multi-Recipient Payments using the [BUX.digital Payment Protocol Merchant Server](https://github.com/bux-digital/documentation/blob/main/merchant-server-api.md).
 
-### Notice for the use of this service
-The transactions created over the CMPCT-API use the Badger Universal Token (BUX) which is an eToken on the eCash blockchain. During the initial acquisation of BUX, an authorization code must be bought by the customer - this process is irreversible regardless of whether BUX were actually minted or used for a purchase! It is highly recommended that Agents inform their Customers about the nature of this payment method. Agents who receive payments should take measures to validate the IPN before approving a purchase (see chapter 5).
-## Process of the Payment Method
-1. Customer chooses payment option BUX or uses direct payment button
-2. Agent server sends GET request containing the payment details to CMPCT API
-3. CMPCT API returns `paymentLink` that leads the Customer to a non-custodial web wallet with prefilled transaction data
-4. Customer pays inside the wallet and, on success, is led to `success_url`
-5. Agent receives IPN and validates it before approving the purchase
+Please refer to the [Terms of Service](https://cmpct.org/tos).
 
-### 1. Customer chooses payment option BUX
+### NOTICE FOR THE USE OF THIS SERVICE
+The transactions created over the CMPCT API use the Badger Universal Token (BUX) which is an eToken on the eCash blockchain. During the initial acquisation of BUX, an authorization code must be bought by the End User - while this purchase can be refunded (minus fee), the minting of BUX with that authorization code is irreversible regardless of whether BUX were actually used for a purchase! It is highly recommended that Agents inform their End Users about the nature of this payment method. Agents should take measures to validate the transaction before approving the purchase (see Section 2.5).
 
-### 2. Agent server sends GET request
-A GET request is made to `https://pay.cmpct.org/v1/`. The query string must follow the exact syntax as specified in the [documentation of the BUX.digital Merchant Server](https://github.com/bux-digital/documentation/blob/main/merchant-server-api.md). Agents have to gather ecash addresses from possible recipients with the prefix `ecash` or `etoken` to which the payment of BUX is sent to. 
+## 1 Using Your Wallet
+### 1.1 Setup Your Wallet
+Visit https://wallet.bader.cash to setup your wallet.
+1. Click Enable Lock to enable access control or skip
+2. Click New Wallet to create a new wallet
+3. NOTE: You will backup your wallet in later steps
+4. Your new wallet is now ready to receive BUX
 
-### 3. CMPCT API returns paymentLink
-Agent redirects Customer to `paymentLink` which will be of the form `https://pay.badger.cash/i/{paymentId}`.
+<img src="images/SetupWallet_01.png" alt="image" width="400"><img src="images/SetupWallet_02.png" alt="image" width="400">
 
-### 4. Customer pays inside the wallet
-The Customer will be redirected to a non-custodial wallet which will be newly opened if the Customer didn't create one using this browser before. Because the `paymentLink` has been used, the related transaction data will be prefilled into the wallet. The Customer, having no sufficient amount of BUX inside their wallet, will be asked to buy an authorization code to MINT the token inside the wallet. This purchase is done by conventional payment methods. After succesful MINT by the Customer, the token can be used in order to settle the payment request. It is possible that the Customer uses previously minted BUX token. For more information about the non-custodial web wallet, please see [this documentation](https://docs.cashtab.com/docs/).
+<img src="images/SetupWallet_03.png" alt="image" width="400"><img src="images/SetupWallet_04.png" alt="image" width="400">
 
-### 5. Agent receives IPN and validates it
-Following the fullfillment of a payment request, an IPN is sent to the URL specified in the `ipn_url` of the initial GET request. This request must be validated by the Agent. Several stages of validation are possible, dependent on the involved risk of the Agent. The recommended stages of validation are as following:
+### 1.2 Backup Your Wallet
+Your seed phrase is the only way to restore your wallet. Write it down. Keep it safe. No one else is able to restore your wallet. Here is an overview on seed phrases and recommendations for safe storage: https://www.coinbase.com/learn/crypto-basics/what-is-a-seed-phrase
+1. Click 'Settings' to access your wallet settings
+2. Click 'Click to review seed phrase' to display your seed phrase
+
+<img src="images/BackupWallet_01.png" alt="image" width="400">
+
+### 1.3 Provide Your Address
+Your wallet address provides the details for other people to send you BUX, similar to your email address. Your address is safe to share as it does not provide access to your wallet.
+You will need to provide your wallet address to be included in a CMPCT.
+1. Click Wallet to display your wallet details
+2. Click XEC, then your ecash address to copy
+
+NOTE: While wallet addresses with both the `ecash` or `etoken` prefix will function interchangeably in a CMPCT, for simplicity using `ecash` is recommended.
+
+<img src="images/ProvideAddress_01.png" alt="image" width="400"><img src="images/ProvideAddress_02.png" alt="image" width="400">
+
+### 1.4 Manage Multiple Wallets
+You can easily have multiple, separate wallets.
+1. Click Settings then click New Wallet to create a new wallet
+2. Toggle Saved wallets to display all of your wallets
+3. Click the Edit icon to set a nickname for each wallet
+
+<img src="images/ManageWallets_01.png" alt="image" width="400"><img src="images/ManageWallets_02.png" alt="image" width="400">
+
+<img src="images/ManageWallets_03.png" alt="image" width="400"><img src="images/ManageWallets_04.png" alt="image" width="400">
+
+## 2 Payment Solution Flow
+1. End User chooses relevant method or uses direct payment link
+2. Agent's server sends GET request containing the transaction details to CMPCT API
+3. CMPCT API returns `paymentUrl` that leads the End User to a non-custodial web wallet with prefilled transaction data
+4. End User pays inside the wallet and, on success, is led to `success_url`
+5. Agent receives Instant Payment Notification (IPN) and validates the IPN before approving the purchase
+
+### 2.1 End User Chooses Payment Option
+Agents are able to flexibly utilize the CMPCT solution to provide End Users with the relevant payment option. For example, this can be done similar to legacy payment options (which can be maintained unchanged in parallel). Agents, affiliates, and others can also create direct payment links, such as buttons on a website or links in an email or text message. Agents are encouraged to inform End Users of the nature of this payment method.
+
+### 2.2 Agent's Server Sends GET request
+A GET request is made to `https://pay.cmpct.org/v1/`. The query string must follow the exact syntax as specified in the [documentation of the BUX.digital Merchant Server](https://github.com/bux-digital/documentation/blob/main/merchant-server-api.md). Agents must gather wallet address(es) from Recipient(s), to which the distribution of BUX will be sent directly from the End User with every transaction. 
+
+### 2.3 CMPCT API Returns `paymentUrl`
+The CMPCT API responds with the same syntax as specified in the [BUX.digital documentation](https://github.com/bux-digital/documentation/blob/main/merchant-server-api.md). The Agent can either make the GET request to the CMPCT API and receive the `paymentUrl` as part of a JSON response or, while not specifying the `result_JSON` parameter, let the End User make the GET request by opening the link in a browser.  
+
+### 2.4 End User pays Inside wallet
+The End User will be redirected to a non-custodial web wallet, which will be newly opened if the End User did not previously create one using this browser session. As `paymentUrl` has been used, the related transaction data will be prefilled into the wallet. The End User, having an insufficient amount of BUX inside their wallet, will be directed to buy an authorization code to Self-Mint the eTokens directly inside the wallet. This purchase is done by conventional payment methods. After the succesful Self-Mint by the End User, the BUX eTokens can be used in order to settle the payment request. It is possible that the End User utilizes previously minted BUX.
+
+### 2.5 Agent Receives IPN and Validates IPN
+Following the successful fullfillment of a payment request, an IPN is sent to the URL specified in the `ipn_url` of the initial GET request. This request must be validated by the Agent. Several stages of validation are possible, dependent on the involved risk of the Agent. The recommended stages of validation are as following:
 1. validate IP address, existence of transaction and order key
 2. validate the transaction outputs
 
-#### 5.1 validate IP address, existence of transaction and invoice
-Make sure that the origin of the IPN matches the origin of  `paymentLink` (`https://pay.badger.cash/i/{paymentId}`). The IPN contains a transaction id, `txn_id`, of the broadcasted transaction. This id allows anyone to verify the existence and contents of this transaction by asking a node (see below). Agents should also check whether the IPN truly matches an open order. Due to the public nature of the blockchain it would be possible to attack the Agent's IPN server with previously used or old, but still valid, transactions. See the following sketch down below.
+#### 2.5.1 validate IP address, existence of transaction and invoice
+Make sure that the origin of the IPN matches the origin of  `paymentUrl` (`https://pay.badger.cash/`). The IPN contains a transaction id, `txn_id`, of the broadcasted transaction. This id allows anyone to verify the existence and contents of this transaction by asking a node (see below). Agents should also check whether the IPN truly matches an open order. Due to the public nature of the blockchain it would be possible to attack the Agent's IPN server with previously used or old, but still valid, transactions. A validation procedure of highest security level would therefore include a comparison between a new `txn_id` and all previously accepted `txn_id`.
 
 ```javascript
 const axios = require('axios');
@@ -112,8 +155,8 @@ If the transaction is existent on the blockchain, `txdata` as defined above will
 ```
 
 
-#### 5.2 validate the transaction outputs
-If Agents have already validated the IP address, concerns that another token than BUX would have been used are minor. Still, this remains an optional validation which is included in the code sample below. Inside `txData`, there is the possibility to validate the exact amounts for each recipient specified by the GET request in chapter 2. Based on  `order_key` or `offer_name`, Agents can call their database to see which query strings they've used and therefore expect to be existent in the transaction outputs. Since addresses in the outputs might not be in the format that Agents use in their GET request (varying prefixes `ecash`/`etoken`), down below will be an example of converting ecash addresses into the desired format. If this additional dependency is undesired, Agents should use addresses with the `ecash` prefix to make the GET request of chapter 2 as they will surely be provided by every node. 
+#### 2.5.2 Validate Transaction Outputs
+If Agents have already validated the IP address, concerns that another token than BUX would have been used are minor. Still, this remains an optional validation which is included in the code sample below. Inside `txData`, it is possible to validate the exact amounts for each Recipient specified by the GET request in Section 2.2. Based on  `order_key` or `offer_name`, Agents can call their database to see which query strings they've used and therefore expect to be existent in the transaction outputs. Since addresses in the outputs might not be in the format that Agents use in their GET request (varying prefixes `ecash`/`etoken`), down below will be an example of converting ecash addresses into the desired format. If this additional dependency is undesired, Agents should use addresses with the `ecash` prefix to make the GET request of Section 2.2 as they will confidently be provided by every node. Agents must certainly validate the transaction outputs if they build the GET request as a static standalone payment link.
 
 ```javascript 
 const ecashaddr = require('ecashaddrjs');
@@ -149,7 +192,7 @@ function convertAddress(address, targetPrefix) {
     }
 };
 ```
-The resulting `recipientArray` will contain all addresses of BUX recipients accompanied by their respective amounts (see below). These should now be compared to the expected results. Please be aware that the additional fees by your relay provider will be included in this array as well as possible change back to the sender. Therefore, it should only be tested if expected addresses/amounts are contained in the transaction ouputs, allowing additional recipients to exist as well. If addresses and amounts are as expected, the purchase can be approved.
+The resulting `recipientArray` will contain all addresses of BUX recipients accompanied by their respective amounts (see below). These should now be compared to the expected results. Please be aware that the additional fees by the network will be included in this array as well as possible change back to the sender. Therefore, it should only be tested if expected addresses/amounts are contained in the transaction ouputs, allowing additional Recipients to exist as well. If addresses and amounts are as expected, the purchase can be approved.
 ```
 [
   {
