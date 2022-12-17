@@ -1,7 +1,6 @@
 # CMPCT Developer Guide
 A solution for trustless Multi-Recipient Payments using the [BUX.digital Payment Protocol Merchant Server](https://github.com/bux-digital/documentation/blob/main/merchant-server-api.md).
 
-Please refer to the [Terms of Service](https://cmpct.org/tos).
 
 ### NOTICE FOR THE USE OF THIS SERVICE
 The transactions created over the CMPCT API use the Badger Universal Token (BUX) which is an eToken on the eCash blockchain. During the initial acquisation of BUX, an authorization code must be bought by the End User - while this purchase can be refunded (minus fee), the minting of BUX with that authorization code is irreversible regardless of whether BUX were actually used for a purchase! It is highly recommended that Agents inform their End Users about the nature of this payment method. Agents should take measures to validate the transaction before approving the purchase (see Section 2.5).
