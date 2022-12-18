@@ -3,13 +3,13 @@ A solution for trustless Multi-Recipient Payments using the [BUX.digital Payment
 
 
 ### NOTICE FOR THE USE OF THIS SERVICE
-The transactions created over the CMPCT API use the Badger Universal Token (BUX) which is an eToken on the eCash blockchain. During the initial acquisation of BUX, an authorization code must be bought by the End User - while this purchase can be refunded (minus fee), the minting of BUX with that authorization code is irreversible regardless of whether BUX were actually used for a purchase! It is highly recommended that Agents inform their End Users about the nature of this payment method. Agents should take measures to validate the transaction before approving the purchase (see Section 2.5).
+The transactions created over the CMPCT API use the Badger Universal Token (BUX), which is an eToken on the eCash blockchain. During the initial acquisation of BUX, an authorization code must be bought by the End User - this process is NOT reversible, regardless of whether BUX were actually minted or used for any purpose. It is highly recommended that Agents inform their End Users about the nature of this payment method. Agents should take measures to validate the transaction before approving the purchase (see Section 2.5).
 
 ## 1 Using Your Wallet
 ### 1.1 Setup Your Wallet
 Visit https://wallet.bader.cash to setup your wallet.
-1. Click Enable Lock to enable access control or skip
-2. Click New Wallet to create a new wallet
+1. Click **Enable Lock** to enable access control or skip
+2. Click **New Wallet** to create a new wallet
 3. NOTE: You will backup your wallet in later steps
 4. Your new wallet is now ready to receive BUX
 
@@ -17,16 +17,16 @@ Visit https://wallet.bader.cash to setup your wallet.
 
 ### 1.2 Backup Your Wallet
 Your seed phrase is the only way to restore your wallet. Write it down. Keep it safe. No one else is able to restore your wallet. Here is an overview on seed phrases and recommendations for safe storage: https://www.coinbase.com/learn/crypto-basics/what-is-a-seed-phrase
-1. Click 'Settings' to access your wallet settings
-2. Click 'Click to review seed phrase' to display your seed phrase
+1. Click **Settings** to access your wallet settings
+2. Click **Click to review seed phrase** to display your seed phrase
 
 <img src="images/BackupWallet.png" alt="image" width="800">
 
 ### 1.3 Provide Your Address
 Your wallet address provides the details for other people to send you BUX, similar to your email address. Your address is safe to share as it does not provide access to your wallet.
 You will need to provide your wallet address to be included in a CMPCT.
-1. Click Wallet to display your wallet details
-2. Click XEC, then your ecash address to copy
+1. Click **Wallet** to display your wallet details
+2. Click **XEC**, then your **ecash address** to copy
 
 NOTE: While wallet addresses with both the `ecash` or `etoken` prefix will function interchangeably in a CMPCT, for simplicity using `ecash` is recommended.
 
@@ -34,9 +34,9 @@ NOTE: While wallet addresses with both the `ecash` or `etoken` prefix will funct
 
 ### 1.4 Manage Multiple Wallets
 You can easily have multiple, separate wallets.
-1. Click Settings then click New Wallet to create a new wallet
-2. Toggle Saved wallets to display all of your wallets
-3. Click the Edit icon to set a nickname for each wallet
+1. Click **Settings** then click **New Wallet** to create a new wallet
+2. Toggle **Saved wallets** to display all of your wallets
+3. Click the **Edit icon** to set a nickname for each wallet
 
 <img src="images/ManageWallets.png" alt="image" width="800">
 
