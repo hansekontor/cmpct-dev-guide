@@ -7,7 +7,7 @@ The transactions created over the CMPCT API use the Badger Universal Token (BUX)
 
 ## 1 Using Your Wallet
 ### 1.1 Setup Your Wallet
-Visit https://wallet.bader.cash to setup your wallet.
+Visit https://wallet.badger.cash to setup your wallet.
 1. Click **Enable Lock** to enable access control or skip
 2. Click **New Wallet** to create a new wallet
 3. NOTE: You will backup your wallet in later steps
@@ -56,7 +56,7 @@ A GET request is made to `https://pay.cmpct.org/v1/`. The query string must foll
 ### 2.3 CMPCT API Returns `paymentUrl`
 The CMPCT API responds with the same syntax as specified in the [BUX.digital documentation](https://github.com/bux-digital/documentation/blob/main/merchant-server-api.md). The Agent can either make the GET request to the CMPCT API and receive the `paymentUrl` as part of a JSON response or, while not specifying the `result_JSON` parameter, let the End User make the GET request by opening the link in a browser.  
 
-### 2.4 End User pays Inside wallet
+### 2.4 End User Pays Inside Wallet
 The End User will be redirected to a non-custodial web wallet, which will be newly opened if the End User did not previously create one using this browser session. As `paymentUrl` has been used, the related transaction data will be prefilled into the wallet. The End User, having an insufficient amount of BUX inside their wallet, will be directed to buy an authorization code to Self-Mint the eTokens directly inside the wallet. This purchase is done by conventional payment methods. After the succesful Self-Mint by the End User, the BUX eTokens can be used in order to settle the payment request. It is possible that the End User utilizes previously minted BUX.
 
 ### 2.5 Agent Receives IPN and Validates IPN
@@ -64,7 +64,7 @@ Following the successful fullfillment of a payment request, an IPN is sent to th
 1. validate IP address, existence of transaction and order key
 2. validate the transaction outputs
 
-#### 2.5.1 validate IP address, existence of transaction and invoice
+#### 2.5.1 Validate IP Address (existence of transaction and invoice)
 Make sure that the origin of the IPN matches the origin of  `paymentUrl` (`https://pay.badger.cash/`). The IPN contains a transaction id, `txn_id`, of the broadcasted transaction. This id allows anyone to verify the existence and contents of this transaction by asking a node (see below). Agents should also check whether the IPN truly matches an open order. Due to the public nature of the blockchain it would be possible to attack the Agent's IPN server with previously used or old, but still valid, transactions. A validation procedure of highest security level would therefore include a comparison between a new `txn_id` and all previously accepted `txn_id`.
 
 ```javascript
