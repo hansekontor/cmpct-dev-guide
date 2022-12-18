@@ -13,9 +13,7 @@ Visit https://wallet.bader.cash to setup your wallet.
 3. NOTE: You will backup your wallet in later steps
 4. Your new wallet is now ready to receive BUX
 
-<img src="images/SetupWallet_01.png" alt="image" width="400"><img src="images/SetupWallet_02.png" alt="image" width="400">
-
-<img src="images/SetupWallet_03.png" alt="image" width="400"><img src="images/SetupWallet_04.png" alt="image" width="400">
+<img src="images/SetupWallet.png" alt="image" width="400">
 
 ### 1.2 Backup Your Wallet
 Your seed phrase is the only way to restore your wallet. Write it down. Keep it safe. No one else is able to restore your wallet. Here is an overview on seed phrases and recommendations for safe storage: https://www.coinbase.com/learn/crypto-basics/what-is-a-seed-phrase
