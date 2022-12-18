@@ -13,14 +13,14 @@ Visit https://wallet.bader.cash to setup your wallet.
 3. NOTE: You will backup your wallet in later steps
 4. Your new wallet is now ready to receive BUX
 
-<img src="images/SetupWallet.png" alt="image" width="400">
+<img src="images/SetupWallet.png" alt="image" width="800">
 
 ### 1.2 Backup Your Wallet
 Your seed phrase is the only way to restore your wallet. Write it down. Keep it safe. No one else is able to restore your wallet. Here is an overview on seed phrases and recommendations for safe storage: https://www.coinbase.com/learn/crypto-basics/what-is-a-seed-phrase
 1. Click 'Settings' to access your wallet settings
 2. Click 'Click to review seed phrase' to display your seed phrase
 
-<img src="images/BackupWallet_01.png" alt="image" width="400">
+<img src="images/BackupWallet.png" alt="image" width="800">
 
 ### 1.3 Provide Your Address
 Your wallet address provides the details for other people to send you BUX, similar to your email address. Your address is safe to share as it does not provide access to your wallet.
@@ -30,7 +30,7 @@ You will need to provide your wallet address to be included in a CMPCT.
 
 NOTE: While wallet addresses with both the `ecash` or `etoken` prefix will function interchangeably in a CMPCT, for simplicity using `ecash` is recommended.
 
-<img src="images/ProvideAddress_01.png" alt="image" width="400"><img src="images/ProvideAddress_02.png" alt="image" width="400">
+<img src="images/ProvideAddress.png" alt="image" width="800">
 
 ### 1.4 Manage Multiple Wallets
 You can easily have multiple, separate wallets.
@@ -38,9 +38,7 @@ You can easily have multiple, separate wallets.
 2. Toggle Saved wallets to display all of your wallets
 3. Click the Edit icon to set a nickname for each wallet
 
-<img src="images/ManageWallets_01.png" alt="image" width="400"><img src="images/ManageWallets_02.png" alt="image" width="400">
-
-<img src="images/ManageWallets_03.png" alt="image" width="400"><img src="images/ManageWallets_04.png" alt="image" width="400">
+<img src="images/ManageWallets.png" alt="image" width="800">
 
 ## 2 Payment Solution Flow
 1. End User chooses relevant method or uses direct payment link
