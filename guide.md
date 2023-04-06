@@ -59,139 +59,61 @@ The CMPCT API responds with the same syntax as specified in the [BUX.digital doc
 The End User will be redirected to a non-custodial web wallet, which will be newly opened if the End User did not previously create one using this browser session. As `paymentUrl` has been used, the related transaction data will be prefilled into the wallet. The End User, having an insufficient amount of BUX inside their wallet, will be directed to buy an authorization code to Self-Mint the eTokens directly inside the wallet. This purchase is done by conventional payment methods. After the succesful Self-Mint by the End User, the BUX eTokens can be used in order to settle the payment request. It is possible that the End User utilizes previously minted BUX.
 
 ### 2.5 Agent Receives IPN and Validates IPN
-Following the successful fullfillment of a payment request, an IPN is sent to the URL specified in the `ipn_url` of the initial GET request. This request must be validated by the Agent. Several stages of validation are possible, dependent on the involved risk of the Agent. The recommended stages of validation are as following:
-1. validate IP address, existence of transaction and order key
-2. validate the transaction outputs
+Following the successful fulfillment of a payment request, an IPN is sent to the URL specified in the `ipn_url` of the initial GET request. This request must be validated by the Agent. This differs severely from legacy payment methods as third parties between the transaction participants usually guarantee trustworthiness of IPNs. With an open, permissionless network, every participant needs to validate that transactions are as intended. Please consider the following properties of the IPN [here](https://github.com/bux-digital/documentation/blob/main/merchant-server-api.md#ipn-post-data).<br>
 
-#### 2.5.1 Validate IP Address (existence of transaction and invoice)
-Make sure that the origin of the IPN matches the origin of  `paymentUrl` (`https://pay.badger.cash/`). The IPN contains a transaction id, `txn_id`, of the broadcasted transaction. This id allows anyone to verify the existence and contents of this transaction by asking a node (see below). Agents should also check whether the IPN truly matches an open order. Due to the public nature of the blockchain it would be possible to attack the Agent's IPN server with previously used or old, but still valid, transactions. A validation procedure of highest security level would therefore include a comparison between a new `txn_id` and all previously accepted `txn_id`.
+First of all, the IP origin of the IPN should be validated as it must equal the origin of the paymentUrl (`https://pay.badger.cash/`). If validated, the IPN received could still indicate an unintended transaction as malicious actors on the network could potentially modify the transaction to their benefit. The recipient of the IPN must now compare intended transaction outputs with actual outputs. The IPN properties (custom/order_key for example) should help the merchant to identify the expected recipients and amounts for a still unfulfilled order. Actual transactions can be reviewed by requesting an eCash node with a transaction hash, as given in the `txn_id` of the IPN data. Nodes might already parse out SLP data and include it in the sent data (as below). If that is the case, Merchants do not have to validate if a transaction is a valid eToken transaction as the node has already done that. See the example below. <br>
 
 ```javascript
 const axios = require('axios');
-
-async function postIpn(req, res) {
-    const ipn = req.body;
-    
-    
-    // validate ip address
-    const ipAddress = req.socket.remoteAddress;
-    // compare... 
-
-
-    // validate existence of transaction
-    const url = `https://ecash.badger.cash:8332/tx/${ipn.txn_id}?slp=true`;
-    const result = await axios.get(url);
-    const txData = result.data;
-
-
-    // validate that transaction settles new order
-    const orderKey = ipn.custom; 
-    // compare payment status of order in Agent database...
-
-}
-```
-If the transaction is existent on the blockchain, `txdata` as defined above will look like this: 
-```
-{
-  hash: 'c403e286094c5f236cf27db31ca26a8e038d708ec71f4aa803931cefcdcfa7e4',
-  fee: 444,
-  rate: 1047,
-  mtime: 1670507577,
-  height: 769485,
-  block: '000000000000000005a5fff31193b30dcfcffd2125e0d380d57c911f439d56c4',
-  time: 1670505744,
-  index: 18,
-  version: 1,
-  inputs: [
-    {
-      prevout: [Object],
-      script: '419033c3cc6ad8a3d90d80f012d11a78c197c458c7d95a52cdc8965fb0de119e0f53f105334ce3771e8b8c998525369e572aae3924f5bfd11873280b32efe24aba412102033df0bcf94dea5bb838eb1187e3b748755a5b87b3feeb16e2eaa6a5b3bbd43c',
-      sequence: 4294967295,
-      coin: [Object]
-    },
-    {
-      prevout: [Object],
-      script: '4184366b1e79947d6d3b253407fc2b28ab2137fdce2add73e2d4db8cb634332c62ee55577bccec31e232ae0d2ef0a9b7702c000e9576c098f7d7f210392d4620c9412102033df0bcf94dea5bb838eb1187e3b748755a5b87b3feeb16e2eaa6a5b3bbd43c',
-      sequence: 4294967295,
-      coin: [Object]
-    }
-  ],
-  outputs: [
-    {
-      value: 0,
-      script: '6a04534c500001010453454e44207e7dacd72dcdb14e00a03dd3aff47f019ed51a6f1f4e4f532ae50692f62bc4e508000000000000c350',
-      address: null
-    },
-    {
-      value: 546,
-      script: '76a9142c7467c77f5904d6bbbac74e3f81fc13deee5f0d88ac',
-      address: 'ecash:qqk8ge780avsf44mhtr5u0uplsfaamjlp5l96rstgd',
-      slp: [Object]
-    },
-    {
-      value: 7254,
-      script: '76a91414fe24d118defcc8ba37559439081cbcaafa0b3088ac',
-      address: 'ecash:qq20ufx3rr00ej96xa2egwggrj7247stxq0awklt2w'
-    }
-  ],
-  locktime: 0,
-  hex: '01000000027f85726d8ef49ca0afa9c3acc41de7b17dae4aea2c5fd328941e07fb233900650100000064419033c3cc6ad8a3d90d80f012d11a78c197c458c7d95a52cdc8965fb0de119e0f53f105334ce3771e8b8c998525369e572aae3924f5bfd11873280b32efe24aba412102033df0bcf94dea5bb838eb1187e3b748755a5b87b3feeb16e2eaa6a5b3bbd43cffffffff5a1aea7995a7c322f3e143a30ca094198f06445344fc9008878c8d6512c4269602000000644184366b1e79947d6d3b253407fc2b28ab2137fdce2add73e2d4db8cb634332c62ee55577bccec31e232ae0d2ef0a9b7702c000e9576c098f7d7f210392d4620c9412102033df0bcf94dea5bb838eb1187e3b748755a5b87b3feeb16e2eaa6a5b3bbd43cffffffff030000000000000000376a04534c500001010453454e44207e7dacd72dcdb14e00a03dd3aff47f019ed51a6f1f4e4f532ae50692f62bc4e508000000000000c35022020000000000001976a9142c7467c77f5904d6bbbac74e3f81fc13deee5f0d88ac561c0000000000001976a91414fe24d118defcc8ba37559439081cbcaafa0b3088ac00000000',
-  slpToken: {
-    tokenId: '7e7dacd72dcdb14e00a03dd3aff47f019ed51a6f1f4e4f532ae50692f62bc4e5',
-    ticker: 'BUX',
-    name: 'Badger Universal Token',
-    uri: 'https://bux.digital',
-    hash: '',
-    decimals: 4
-  },
-  confirmations: 2
-}
-```
-
-
-#### 2.5.2 Validate Transaction Outputs
-If Agents have already validated the IP address, concerns that another token than BUX would have been used are minor. Still, this remains an optional validation which is included in the code sample below. Inside `txData`, it is possible to validate the exact amounts for each Recipient specified by the GET request in Section 2.2. Based on  `order_key` or `offer_name`, Agents can call their database to see which query strings they've used and therefore expect to be existent in the transaction outputs. Since addresses in the outputs might not be in the format that Agents use in their GET request (varying prefixes `ecash`/`etoken`), down below will be an example of converting ecash addresses into the desired format. If this additional dependency is undesired, Agents should use addresses with the `ecash` prefix to make the GET request of Section 2.2 as they will confidently be provided by every node. Agents must certainly validate the transaction outputs if they build the GET request as a static standalone payment link.
-
-```javascript 
-const ecashaddr = require('ecashaddrjs');
-
-const outputs = txData.outputs;
-const buxTokenId = "7e7dacd72dcdb14e00a03dd3aff47f019ed51a6f1f4e4f532ae50692f62bc4e5";
 const buxDecimals = 4;
-const isBuxTransaction = txData.slpToken.tokenId === buxTokenId;
 
-let recipientArray = [];  
-if (isBuxTransaction) {
-    for (let i = 1; i < outputs.length; i++) {
-        const isSlpOutput = outputs[i].slp;
-        if (isSlpOutput) {  
-            const buxAmount = +(outputs[i].slp.value) / 10**buxDecimals;
-            recipientArray.push({
-                address: convertAddress(outputs[i].address, "etoken"),
-                buxAmount: buxAmount
-            });
-        }
-    }
-}
+// partial ipn POST data
+const ipn = {
+   txn_id: "bbfc1da442c4cd5214f3eb72fd9113d12f8f0352cc74ac7948029e8adb40dda9"
+};
 
+// call to merchant database to get expected amounts and recipients based on `order_key`. (amount = 1 BUX = 10000 base units of BUX)
+const expected = {
+   amount: 1 * 10**buxDecimals,
+   recipient: "ecash:qz92ejgtzd0wstr6qjjy6cef533635cxju8vuzeqye"
+};
+
+(async () => {
+   // GET request to node
+   const url = `https://ecash.badger.cash:8332/tx/${ipn.txn_id}?slp=true`;
+   const result = await axios.get(url);
+   const txData = result.data;
+
+   // process node data to data format used for comparison
+   const outputArray = txData.outputs.map(function(output) {
+       return {
+           amount: Number(output.slp?.value),
+           recipient: output.address
+       };
+   });
+  
+   // compare arrays or normalize addresses before && normalize amounts
+   const isIncluded = outputArray.some(output => output.amount === expected.amount && output.recipient === expected.recipient);
+   console.log(isIncluded);
+})();
+```
+Please consider the two possible address formats (`ecash`/`etoken`) when comparing. Nodes might only give you the address format with prefix `ecash`. One way to standardize addresses to one of the two formats is given below.
+
+```javascript
+const ecashaddr = require('ecashaddrjs');
 
 // function returns address with desired prefix
 function convertAddress(address, targetPrefix) {
-    const { prefix, type, hash } = ecashaddr.decode(address);
-    if (prefix === targetPrefix) {
-        return address;
-    } else {
-        const convertedAddress = ecashaddr.encode(targetPrefix, type, hash);
-        return convertedAddress;
-    }
+   const { prefix, type, hash } = ecashaddr.decode(address);
+   if (prefix === targetPrefix) {
+       return address;
+   } else {
+       const convertedAddress = ecashaddr.encode(targetPrefix, type, hash);
+       return convertedAddress;
+   }
 };
+
+const ecashAddress = convertAddress("etoken:qz92ejgtzd0wstr6qjjy6cef533635cxjufj4q08qw", "ecash");
 ```
-The resulting `recipientArray` will contain all addresses of BUX recipients accompanied by their respective amounts (see below). These should now be compared to the expected results. Please be aware that the additional fees by the network will be included in this array as well as possible change back to the sender. Therefore, it should only be tested if expected addresses/amounts are contained in the transaction ouputs, allowing additional Recipients to exist as well. If addresses and amounts are as expected, the purchase can be approved.
-```
-[
-  {
-    address: 'etoken:qqk8ge780avsf44mhtr5u0uplsfaamjlp53mnpxvv6',
-    buxAmount: 5
-  }
-]
-```
+
+Depending on the merchant’s risk of accepting false IPNs, it might also be very helpful to keep a list of transaction hashes already used for fulfilling orders so that old transactions could not be used again. 
