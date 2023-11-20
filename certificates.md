@@ -14,6 +14,8 @@ ecash:qqp48857ljkdyvvj04r9fwdwl4mwktc39u9djzswkl 35%
 {"address":"ecash:qqp48857ljkdyvvj04r9fwdwl4mwktc39u9djzswkl","share":0.35,"id":"61czb7cd"}
 ```
 The id specifies the whole certificate order additionally to address and share. Via the given id, the whole certificate can be seen at [cert.cash](https://cert.cash/certs/search). The controller of the address needs to sign this message with the according private key with the signing function of [Cashtab](https://wallet.badger.cash/). On the "Send" tab scroll down and click on "Sign Message". Copy your message into the empty "Message" field, click on the dark blue "Sign Message" button and confirm with "OK". Copy and store the given signature.
+
+
 <img src="images/SignMessage_01.png" alt="image" width="200">
 <img src="images/SignMessage_02.png" alt="image" width="200">
 <img src="images/SignMessage_03.png" alt="image" width="200">
