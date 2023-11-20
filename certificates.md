@@ -1,7 +1,7 @@
 # Using Certificates for the CMPCT Payment Server
 
 ## What is a Certificate?
-A Payment Certificate is a document according to the [DID Protocol](https://github.com/hansekontor/did-protocol) that provides a template for creating recurring payments via a BIP70 payment server. The certificate contains pro-rata amounts for each non-fee output that are used to create an absolute distribution of token outputs. A verifiable proof of the certificate is broadcasted to the eCash blockchain. 
+A Payment Certificate is a document according to the [DID Protocol](https://github.com/hansekontor/did-protocol/blob/main/did-cert.md) that provides a template for creating recurring payments via a BIP70 payment server [Payment Certificate](https://github.com/hansekontor/did-protocol/blob/main/paymentCertificate.md). The certificate contains pro-rata amounts for each non-fee output that are used to create an absolute distribution of token outputs. A verifiable proof of the certificate is broadcasted to the eCash blockchain. 
 
 ## Getting a Certificate
 1. Ordering a Certificate. Our payment certificate implies a BIP70 fee of 5% of the requested amount. Therefore, certificates only list recipients and shares for 95% of the requested amount. Ordering a certificate requires an email from one of the recipients to info@cert.cash specifying a list of addresses and shares for the certificate. The example below contains all the relevant data.
