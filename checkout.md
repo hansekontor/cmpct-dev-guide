@@ -1,6 +1,6 @@
 # Checkout Documentation
-Version 0.1
-First published on Jan 12, 2024
+Version 0.1 <br /> 
+First published on Jan 12, 2024 <br/>
 Last updated on Jan 12, 2024
 
 Cashtab Checkout for Self-Mint SLP Tokens.
